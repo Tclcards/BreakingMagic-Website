@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NAV_LINKS } from "@/lib/site";
 import { Wordmark } from "@/components/Wordmark";
 
@@ -10,10 +10,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close the mobile menu whenever the route changes.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Links in the mobile menu close it on tap (see onClick below).
+  const closeMenu = () => setOpen(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-carbon bg-ink/90 backdrop-blur">
@@ -72,6 +70,7 @@ export default function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
+                  onClick={closeMenu}
                   aria-current={pathname === link.href ? "page" : undefined}
                   className="block rounded-md px-2 py-3 text-base text-silver hover:bg-carbon"
                 >
@@ -82,6 +81,7 @@ export default function Header() {
             <li className="mt-3">
               <Link
                 href="/apply"
+                onClick={closeMenu}
                 className="block rounded-md bg-gold px-4 py-3 text-center font-display font-bold uppercase tracking-wide text-ink"
               >
                 Apply to Stream
