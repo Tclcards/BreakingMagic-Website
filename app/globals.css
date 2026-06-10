@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/*
+  Breaking Magic design tokens.
+  Hex values are canonical, pulled from the brand guide PDF (section 06 — Color).
+*/
+@theme {
+  --color-ink: #0a090c;
+  --color-carbon: #16151b;
+  --color-gold: #f4c252;
+  --color-gold-hot: #ffe0a0;
+  --color-purple: #b18cf0;
+  --color-purple-deep: #8a35e0;
+  --color-silver: #eceaf0;
+  --color-muted: #9a98a6;
+  --color-kraft: #c6a86e;
+
+  --font-display: var(--font-outfit);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-silver);
+  font-family: var(--font-sans);
+}
+
+/* Visible keyboard focus everywhere, in brand gold. */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-purple-deep);
+  color: var(--color-silver);
+}
+
+/* The hero rip "opens" once on load. Disabled under prefers-reduced-motion. */
+@keyframes rip-open {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rip-open-x {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-rip-open {
+    animation: rip-open 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform-origin: top;
+  }
+  .animate-rip-open-x {
+    animation: rip-open-x 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform-origin: left;
+  }
+  .animate-fade-rise {
+    animation: fade-rise 0.7s ease-out 0.45s both;
+  }
+}
+
+/* Gradient text for the hero lockup: outer letters silver, inner letters purple
+   blending to gold as they approach the rip (per the primary lockup artwork). */
+.lockup-breaking {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-silver) 0%,
+    var(--color-silver) 42%,
+    var(--color-purple) 72%,
+    var(--color-gold) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.lockup-magic {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-gold) 0%,
+    var(--color-purple) 28%,
+    var(--color-silver) 58%,
+    var(--color-silver) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
