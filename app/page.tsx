@@ -34,14 +34,14 @@ const OFFER = [
   },
   {
     title: "You stream, you earn",
-    body: "Go live under the Breaking Magic banner, rip the product, bring the energy. Transparent splits, fast payouts, no back-office.",
+    body: "Go live from home under the Breaking Magic banner, rip the product, bring the energy. Transparent splits, fast payouts, no back-office.",
   },
 ];
 
 const STEPS = [
   { n: "01", title: "Apply", body: "Tell us who you are and what you break." },
   { n: "02", title: "Onboard", body: "Account setup, brand kit, first allocation." },
-  { n: "03", title: "Go live", body: "Rip product on your schedule, under the banner." },
+  { n: "03", title: "Go live", body: "Rip product from home, on your schedule, under the banner." },
   { n: "04", title: "Get paid", body: "Breaks settle fast. Track every payout." },
 ];
 
@@ -93,6 +93,10 @@ export default function Home() {
           <HeroLockup />
           <p className="animate-fade-rise mt-10 max-w-xl text-lg text-muted sm:text-xl">
             {SITE_TAGLINE}
+          </p>
+          <p className="animate-fade-rise mt-4 max-w-xl text-base text-muted sm:text-lg">
+            Stream right from home — no studio, no warehouse, no commute. All
+            you need is your setup and a camera.
           </p>
           <div className="animate-fade-rise mt-10">
             <GoldButton href="/apply">Apply to Stream</GoldButton>
