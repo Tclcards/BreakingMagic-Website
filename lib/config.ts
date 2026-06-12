@@ -1,14 +1,14 @@
 /*
   ────────────────────────────────────────────────────────────────────────────
-  FORM ENDPOINT — paste your form service URL here.
+  APPLY ENDPOINT
 
-  The Apply page POSTs the application as JSON to this URL. The easiest setup:
-    1. Create a free form at https://formspree.io (takes ~2 minutes).
-    2. Copy the endpoint it gives you, e.g. "https://formspree.io/f/abcdwxyz".
-    3. Paste it between the quotes below and redeploy.
+  The Apply page POSTs applications to this same-origin route. The route
+  (app/api/apply/route.ts) validates the data, stores it in Supabase, and
+  emails a notification.
 
-  Until a real endpoint is set, the form shows a friendly "not configured yet"
-  message instead of failing silently.
+  Configuration lives in environment variables, not here — see .env.example:
+    SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY,
+    APPLICATIONS_NOTIFY_EMAIL, APPLICATIONS_FROM_EMAIL.
   ────────────────────────────────────────────────────────────────────────────
 */
-export const FORM_ENDPOINT = ""; // TODO: paste your Formspree (or similar) endpoint URL here
+export const APPLY_ENDPOINT = "/api/apply";
