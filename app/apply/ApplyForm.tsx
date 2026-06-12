@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FORM_ENDPOINT } from "@/lib/config";
+import { APPLY_ENDPOINT } from "@/lib/config";
 
 const CATEGORIES = ["Pokémon", "One Piece", "Sports", "Gundam", "Other"];
 
@@ -45,7 +45,7 @@ function Field({
 export default function ApplyForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<
-    "idle" | "submitting" | "success" | "error" | "unconfigured"
+    "idle" | "submitting" | "success" | "error"
   >("idle");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -89,14 +89,9 @@ export default function ApplyForm() {
       return;
     }
 
-    if (!FORM_ENDPOINT) {
-      setStatus("unconfigured");
-      return;
-    }
-
     setStatus("submitting");
     try {
-      const response = await fetch(FORM_ENDPOINT, {
+      const response = await fetch(APPLY_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
@@ -106,12 +101,25 @@ export default function ApplyForm() {
           whatnot,
           socials: String(data.get("socials") ?? "").trim(),
           audience,
-          categories: categories.join(", "),
+          categories,
           schedule,
           why,
+          // Honeypot — must stay empty. Mirrors the hidden field below.
+          company: String(data.get("company") ?? "").trim(),
         }),
       });
-      if (!response.ok) throw new Error(`Form endpoint returned ${response.status}`);
+
+      // Surface server-side validation errors next to the right fields.
+      if (response.status === 422) {
+        const payload = (await response.json().catch(() => null)) as {
+          fieldErrors?: Errors;
+        } | null;
+        setErrors(payload?.fieldErrors ?? {});
+        setStatus("idle");
+        return;
+      }
+
+      if (!response.ok) throw new Error(`Apply endpoint returned ${response.status}`);
       setStatus("success");
     } catch {
       setStatus("error");
@@ -137,6 +145,21 @@ export default function ApplyForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="mt-12 space-y-8">
+      {/*
+        Honeypot: hidden from real users (and screen readers), but bots that
+        auto-fill every field will populate it — the server drops those.
+      */}
+      <div aria-hidden className="hidden">
+        <label htmlFor="company">Company</label>
+        <input
+          id="company"
+          name="company"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <Field label="Name" htmlFor="name" error={errors.name}>
         <input
           id="name"
@@ -262,18 +285,6 @@ export default function ApplyForm() {
           className={inputClass}
         />
       </Field>
-
-      {status === "unconfigured" && (
-        <p
-          role="alert"
-          className="rounded-md border border-purple/40 bg-carbon/60 p-4 text-sm text-silver"
-        >
-          The application form isn&apos;t connected yet. Until it is, email
-          your application to{" "}
-          {/* TODO: replace with the real business contact email */}
-          <span className="text-purple">hello@breakingmagic.example.com</span>.
-        </p>
-      )}
 
       {status === "error" && (
         <p
